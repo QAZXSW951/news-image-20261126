@@ -4,12 +4,16 @@
 // Usage:  MAKEFUN_OUTPUT_DIR=out node main.ts
 // If MAKEFUN_OUTPUT_DIR is unset it falls back to /output.
 // The script does no network access and writes exactly one file.
-import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
+import { existsSync, readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const sourcePath = join(here, "entry.png");
+
+if (!existsSync(sourcePath)) {
+  throw new Error(`Missing entry image: ${sourcePath} does not exist.`);
+}
 
 const targetDir = process.env.MAKEFUN_OUTPUT_DIR || "/output";
 const targetPath = join(targetDir, "entry.png");
